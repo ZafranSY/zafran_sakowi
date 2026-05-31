@@ -1,4 +1,4 @@
-name: Deploy App
+name: Deploy Portfolio
 
 on:
   push:
@@ -12,29 +12,43 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build
-        run: pnpm build
-
-      - name: Deploy
+      - name: Build Docker image
         run: |
-          echo "Deploying app..."
-          # Target directory on your server
-          DEPLOY_PATH="/var/www/zafran-sakowi"
-          
-          mkdir -p $DEPLOY_PATH
-          cp -r . $DEPLOY_PATH
-          
-          echo "Deployment successful!"
+          echo "🔨 Building Docker image..."
+          docker build -t zafran-sakowi-app:latest .
+          echo "✅ Docker image built successfully"
+
+      - name: Deploy container
+        run: |
+          echo "🚀 Deploying new container..."
+
+          # Stop and remove old container if it exists
+          docker stop zafran-sakowi-app || true
+          docker rm zafran-sakowi-app || true
+
+          # Start the new container
+          docker run -d \
+            --name zafran-sakowi-app \
+            --restart always \
+            --network homelab \
+            -p 3000:3000 \
+            -e NODE_ENV=production \
+            -e PORT=3000 \
+            -e HOSTNAME=0.0.0.0 \
+            zafran-sakowi-app:latest
+
+          echo "✅ Container started successfully"
+
+      - name: Health check
+        run: |
+          echo "🏥 Waiting for app to be ready..."
+          sleep 10
+          # Try to hit the container to confirm it's up
+          docker exec zafran-sakowi-app wget --no-verbose --tries=3 --spider http://localhost:3000 && \
+            echo "✅ App is live on port 3000!" || \
+            echo "⚠️ App may still be starting up, check: docker logs zafran-sakowi-app"
+
+      - name: Cleanup old images
+        run: |
+          docker image prune -f
+          echo "🧹 Cleaned up dangling images"
