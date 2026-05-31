@@ -1,0 +1,40 @@
+name: Deploy App
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm build
+
+      - name: Deploy
+        run: |
+          echo "Deploying app..."
+          # Target directory on your server
+          DEPLOY_PATH="/var/www/zafran-sakowi"
+          
+          mkdir -p $DEPLOY_PATH
+          cp -r . $DEPLOY_PATH
+          
+          echo "Deployment successful!"
