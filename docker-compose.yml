@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  portfolio:
+    # TODO: Replace with your actual Gitea registry path
+    # Format: your-gitea-host/your-username/zafran_sakowi:latest
+    # Example: gitea.yourdomain.com/zafran/zafran_sakowi:latest
+    image: ${REGISTRY_IMAGE:-zafran-sakowi-app:latest}
+    container_name: zafran-sakowi-app
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
