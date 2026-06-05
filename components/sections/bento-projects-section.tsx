@@ -1,5 +1,7 @@
 "use client"
 
+import Link from "next/link"
+
 import { ScrollReveal } from "@/components/scroll-reveal"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -28,13 +30,13 @@ export function BentoProjectsSection() {
     <section
       id="projects"
       className="mb-24 scroll-mt-24"
-      aria-label="Projects"
+      aria-label="Project Summary"
     >
       {/* Section label */}
       <ScrollReveal id="projects-label">
         <div className="mb-8 flex items-center gap-3">
           <span className="font-mono text-xs uppercase tracking-widest text-zinc-600">
-            03 / Projects
+            03 / Project Summary
           </span>
           <div className="flex-1 h-px bg-zinc-900" />
         </div>
@@ -61,9 +63,17 @@ export function BentoProjectsSection() {
                   <p className="font-mono text-[10px] uppercase tracking-widest text-zinc-600 mb-0.5">
                     Cipta Craft · Lead Developer
                   </p>
-                  <h3 className="font-semibold text-zinc-100 text-base leading-tight group-hover:text-white transition-colors duration-300">
-                    XFitness
-                  </h3>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="font-semibold text-zinc-100 text-base leading-tight group-hover:text-white transition-colors duration-300">
+                      XFitness
+                    </h3>
+                    <Link
+                      href="/projects/xfitness"
+                      className="inline-flex items-center gap-1 rounded-sm border border-white/20 bg-white/10 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all duration-200"
+                    >
+                      Case Study →
+                    </Link>
+                  </div>
                 </div>
               </div>
               <a
@@ -136,9 +146,17 @@ export function BentoProjectsSection() {
                 <p className="font-mono text-[10px] uppercase tracking-widest text-zinc-600">
                   Cipta Craft · Full-Stack Dev
                 </p>
-                <h3 className="font-semibold text-zinc-200 text-sm group-hover:text-white transition-colors duration-300">
-                  Anjung Meriah CMS
-                </h3>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="font-semibold text-zinc-200 text-sm group-hover:text-white transition-colors duration-300">
+                    Anjung Meriah CMS
+                  </h3>
+                  <Link
+                    href="/projects/anjung-meriah"
+                    className="inline-flex items-center gap-1 rounded-sm border border-white/20 bg-white/10 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all duration-200"
+                  >
+                    Case Study →
+                  </Link>
+                </div>
               </div>
             </div>
 
@@ -219,9 +237,17 @@ export function BentoProjectsSection() {
                       EfficientNetB0
                     </Badge>
                   </div>
-                  <h3 className="font-semibold text-zinc-200 text-sm group-hover:text-white transition-colors duration-300 mt-0.5">
-                    FloraScan
-                  </h3>
+                  <div className="flex items-center gap-2 flex-wrap mt-0.5">
+                    <h3 className="font-semibold text-zinc-200 text-sm group-hover:text-white transition-colors duration-300">
+                      FloraScan
+                    </h3>
+                    <Link
+                      href="/projects/florascan"
+                      className="inline-flex items-center gap-1 rounded-sm border border-white/20 bg-white/10 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all duration-200"
+                    >
+                      Case Study →
+                    </Link>
+                  </div>
                 </div>
               </div>
 
@@ -298,9 +324,17 @@ export function BentoProjectsSection() {
                     <p className="font-mono text-[10px] uppercase tracking-widest text-zinc-600">
                       Academic Project · Full-Stack Dev
                     </p>
-                    <h3 className="font-semibold text-zinc-200 text-sm group-hover:text-white transition-colors duration-300 mt-0.5">
-                      TVPSS Management Information System
-                    </h3>
+                    <div className="flex items-center gap-2 flex-wrap mt-0.5">
+                      <h3 className="font-semibold text-zinc-200 text-sm group-hover:text-white transition-colors duration-300">
+                        TVPSS Management Information System
+                      </h3>
+                      <Link
+                        href="/projects/tvpss"
+                        className="inline-flex items-center gap-1 rounded-sm border border-white/20 bg-white/10 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all duration-200"
+                      >
+                        Case Study →
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>

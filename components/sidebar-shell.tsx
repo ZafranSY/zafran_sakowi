@@ -1,25 +1,26 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Github, Linkedin, Twitter, Youtube, ExternalLink } from "lucide-react"
 import { ScrollReveal } from "@/components/scroll-reveal"
 
 const NAV_ITEMS = [
-  { id: "about",      label: "About",           href: null },
-  { id: "experience", label: "Experience",       href: null },
-  { id: "projects",   label: "Project Summary",  href: null },
-  { id: "the-lab",    label: "The Lab",           href: null },
-  { id: null,         label: "Projects",          href: "/projects" },
-  { id: null,         label: "Journal",           href: "/journal" },
+  { href: "/#about",      label: "About" },
+  { href: "/#experience", label: "Experience" },
+  { href: "/#projects",   label: "Project Summary" },
+  { href: "/#the-lab",    label: "The Lab" },
+  { href: "/projects",    label: "Projects" },
+  { href: "/journal",     label: "Journal" },
 ]
 
 const SOCIALS = [
-  { icon: Github, href: "https://github.com/zafransakowi", label: "GitHub" },
+  { icon: Github,   href: "https://github.com/zafransakowi",   label: "GitHub" },
   { icon: Linkedin, href: "https://linkedin.com/in/zafransakowi", label: "LinkedIn" },
-  { icon: Twitter, href: "https://twitter.com/zafransakowi", label: "Twitter" },
-  { icon: Youtube, href: "https://youtube.com/@zafransakowi", label: "YouTube" },
+  { icon: Twitter,  href: "https://twitter.com/zafransakowi",  label: "Twitter" },
+  { icon: Youtube,  href: "https://youtube.com/@zafransakowi", label: "YouTube" },
 ]
 
 const TERMINAL_LINES = [
@@ -33,31 +34,9 @@ const TERMINAL_LINES = [
   { type: "cursor", content: "" },
 ]
 
-export function Sidebar() {
-  const [activeSection, setActiveSection] = useState("about")
+export function SidebarShell() {
+  const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id)
-        })
-      },
-      { rootMargin: "-40% 0px -55% 0px" }
-    )
-    NAV_ITEMS.forEach(({ id }) => {
-      if (!id) return
-      const el = document.getElementById(id)
-      if (el) observer.observe(el)
-    })
-    return () => observer.disconnect()
-  }, [])
-
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
-    setMobileOpen(false)
-  }
 
   return (
     <>
@@ -68,9 +47,9 @@ export function Sidebar() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
           </span>
-          <span className="font-semibold text-sm text-foreground tracking-tight">
+          <Link href="/" className="font-semibold text-sm text-foreground tracking-tight">
             Zafran Sakowi
-          </span>
+          </Link>
         </div>
         <button
           onClick={() => setMobileOpen((v) => !v)}
@@ -88,28 +67,20 @@ export function Sidebar() {
         <div className="glass-nav fixed inset-x-0 top-[57px] z-30 px-6 py-8 lg:hidden">
           <nav aria-label="Mobile navigation">
             <ul className="flex flex-col gap-1">
-              {NAV_ITEMS.map(({ id, label, href }) => (
-                <li key={label}>
-                  {href ? (
-                    <Link
-                      href={href}
-                      className="block w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 text-zinc-400 hover:text-white hover:bg-zinc-900"
-                    >
-                      {label}
-                    </Link>
-                  ) : (
-                    <button
-                      onClick={() => scrollTo(id!)}
-                      className={cn(
-                        "w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200",
-                        activeSection === id
-                          ? "bg-zinc-800 text-white"
-                          : "text-zinc-400 hover:text-white hover:bg-zinc-900"
-                      )}
-                    >
-                      {label}
-                    </button>
-                  )}
+              {NAV_ITEMS.map(({ href, label }) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    onClick={() => setMobileOpen(false)}
+                    className={cn(
+                      "block w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200",
+                      pathname === href
+                        ? "bg-zinc-800 text-white"
+                        : "text-zinc-400 hover:text-white hover:bg-zinc-900"
+                    )}
+                  >
+                    {label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -135,11 +106,13 @@ export function Sidebar() {
             </div>
 
             {/* Name */}
-            <h1 className="text-5xl font-bold tracking-tight text-white leading-none">
-              Zafran
-              <br />
-              Sakowi
-            </h1>
+            <Link href="/" className="block">
+              <h1 className="text-5xl font-bold tracking-tight text-white leading-none">
+                Zafran
+                <br />
+                Sakowi
+              </h1>
+            </Link>
 
             {/* Role */}
             <p className="mt-3 text-base font-medium text-zinc-400 tracking-tight">
@@ -156,52 +129,38 @@ export function Sidebar() {
             </p>
           </div>
 
-          {/* Navigation with floating pill hover */}
+          {/* Navigation */}
           <nav aria-label="Page sections">
             <ul className="flex flex-col gap-1">
-              {NAV_ITEMS.map(({ id, label, href }) => {
-                const isActive = id ? activeSection === id : false
-                const content = (
-                  <>
-                    {/* Animated line indicator */}
-                    <span
-                      className={cn(
-                        "block h-px shrink-0 bg-current transition-all duration-300",
-                        isActive ? "w-16" : "w-6 group-hover:w-10"
-                      )}
-                    />
-                    <span className="font-mono text-xs font-bold uppercase tracking-widest">
-                      {label}
-                    </span>
-                  </>
-                )
+              {NAV_ITEMS.map(({ href, label }) => {
+                const isActive = pathname === href
                 return (
-                  <li key={label}>
-                    {href ? (
-                      <Link
-                        href={href}
-                        className="nav-pill-hover group relative flex items-center gap-4 w-full text-left py-2 px-3 -mx-3 rounded-lg transition-all duration-300 text-zinc-500 hover:text-white"
-                      >
-                        {content}
-                      </Link>
-                    ) : (
-                      <button
-                        onClick={() => scrollTo(id!)}
+                  <li key={href}>
+                    <Link
+                      href={href}
+                      className={cn(
+                        "nav-pill-hover group relative flex items-center gap-4 w-full text-left py-2 px-3 -mx-3 rounded-lg transition-all duration-300",
+                        isActive ? "text-white" : "text-zinc-500 hover:text-white"
+                      )}
+                    >
+                      {/* Animated line indicator */}
+                      <span
                         className={cn(
-                          "nav-pill-hover group relative flex items-center gap-4 w-full text-left py-2 px-3 -mx-3 rounded-lg transition-all duration-300",
-                          isActive ? "text-white" : "text-zinc-500 hover:text-white"
+                          "block h-px shrink-0 bg-current transition-all duration-300",
+                          isActive ? "w-16" : "w-6 group-hover:w-10"
                         )}
-                      >
-                        {content}
-                      </button>
-                    )}
+                      />
+                      <span className="font-mono text-xs font-bold uppercase tracking-widest">
+                        {label}
+                      </span>
+                    </Link>
                   </li>
                 )
               })}
             </ul>
           </nav>
 
-          {/* Mini Terminal - Hidden on short screens to prioritize CTA */}
+          {/* Mini Terminal - Hidden on short screens */}
           <div className="hide-on-short rounded-md border border-zinc-800 bg-zinc-950 overflow-hidden">
             {/* Chrome bar */}
             <div className="flex items-center gap-1.5 border-b border-zinc-800 bg-zinc-900/60 px-4 py-2.5">
@@ -238,7 +197,7 @@ export function Sidebar() {
         </div>
 
         {/* Bottom: Social links + CTA */}
-        <ScrollReveal immediate id="sidebar-bottom">
+        <ScrollReveal immediate id="sidebar-shell-bottom">
           <div className="flex flex-col gap-3 pt-2">
             <ul className="flex items-center gap-4" aria-label="Social links">
               {SOCIALS.map(({ icon: Icon, href, label }) => (

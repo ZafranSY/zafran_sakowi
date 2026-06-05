@@ -6,11 +6,12 @@ import { cn } from "@/lib/utils"
 interface ScrollRevealProps {
   children: React.ReactNode
   className?: string
+  id?: string
   delay?: number
   immediate?: boolean
 }
 
-export function ScrollReveal({ children, className, delay = 0, immediate = false }: ScrollRevealProps) {
+export function ScrollReveal({ children, className, id, delay = 0, immediate = false }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(immediate)
 
@@ -65,7 +66,7 @@ export function ScrollReveal({ children, className, delay = 0, immediate = false
   return (
     <div
       ref={ref}
-      id={ref.current?.id}
+      id={id}
       className={cn(
         "transition-all duration-700 ease-out",
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5",
